@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserRequestValidator {
 
-    private void validate(UserRequestModel model){
+    public void validate(UserRequestModel model){
         if(model.getFirstName() == null || model.getFirstName().length()<3){
             throw new IllegalArgumentException("First name cannot be null or less than 3 characters long");
         }
