@@ -1,8 +1,13 @@
 package com.caldeira.projetofinal.user.services;
 
+import com.caldeira.projetofinal.user.entities.UserEntity;
+import com.caldeira.projetofinal.user.models.response.UserResponseModel;
 import com.caldeira.projetofinal.user.repositories.UserRepository;
 import com.caldeira.projetofinal.user.validators.UserRequestValidator;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -13,9 +18,14 @@ public class UserService {
         this.userRepository = userRepository;
         this.userRequestValidator = userRequestValidator;
     }
+
+    public List<UserResponseModel> getAll(){
+        List<UserEntity> userEntities = userRepository.findAll();
+        return userEntities.stream().map(user -> new UserResponseModel(user.getId(),user.getFirstName(),
+                user.getLastName(),user.getCreationDate())).collect(Collectors.toList());
+    }
 }
-/* Criar a camada de serviços chamada UserService no pacote services. Essa classe deverá conter nossas regras de negócio.
-Ela deverá ser anotada com @service para o Spring gerenciá-la. Deverá ter dois campos, private final UserRepository
-userRepository e private final UserRequestValidator userRequestValidator;, um construtor com dois parâmetros, public
-UserService(UserRepository userRepository, UserRequestValidator userRequestValidator) para injeção do userRepository
-e do userRequestValidator à classe. Os métodos serão implementados nas próximas tarefas. */
+
+
+
+

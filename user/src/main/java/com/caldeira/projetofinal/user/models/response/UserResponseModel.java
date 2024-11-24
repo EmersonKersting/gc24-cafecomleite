@@ -1,4 +1,4 @@
-package main.java.com.caldeira.projetofinal.user.models.response;
+package com.caldeira.projetofinal.user.models.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
