@@ -50,4 +50,15 @@ public class UserController {
         }
         return ResponseEntity.ok(updatedUser);
     }
+
+       @DeleteMapping("/delete-by-id/{id}")
+    public ResponseEntity<UserResponseModel> deleteById(@PathVariable UUID id) {
+        boolean isDeleted = userService.deleteById(id);
+
+        if (isDeleted) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
