@@ -1,12 +1,11 @@
 package com.caldeira.projetofinal.user.controllers;
 
 
+import com.caldeira.projetofinal.user.models.request.UserRequestModel;
 import com.caldeira.projetofinal.user.models.response.UserResponseModel;
 import com.caldeira.projetofinal.user.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,10 +35,19 @@ public class UserController {
         }
         return ResponseEntity.ok(user);
     }
+
     @PostMapping("/create")
     public ResponseEntity<UserResponseModel> create(@RequestBody UserRequestModel model) {
         UserResponseModel createdUser = userService.create(model);
         return ResponseEntity.status(201).body(createdUser);
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<UserResponseModel> update(@PathVariable UUID id, @RequestBody UserRequestModel model) {
+        UserResponseModel updatedUser = userService.update(id, model);
+        if (updatedUser == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedUser);
+    }
 }
