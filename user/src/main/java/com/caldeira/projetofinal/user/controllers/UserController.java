@@ -1,6 +1,7 @@
 package com.caldeira.projetofinal.user.controllers;
 
-import main.java.com.caldeira.projetofinal.user.models.response.UserResponseModel;
+
+import com.caldeira.projetofinal.user.models.response.UserResponseModel;
 import com.caldeira.projetofinal.user.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
