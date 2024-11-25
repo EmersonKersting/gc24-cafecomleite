@@ -1,11 +1,10 @@
 package com.caldeira.projetofinal.user.controllers;
 
-import main.java.com.caldeira.projetofinal.user.models.response.UserResponseModel;
+import com.caldeira.projetofinal.user.models.request.UserRequestModel;
+import com.caldeira.projetofinal.user.models.response.UserResponseModel;
 import com.caldeira.projetofinal.user.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +22,11 @@ public class UserController {
     public ResponseEntity<List<UserResponseModel>> getAll() {
         List<UserResponseModel> users = userService.getAll();
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<UserResponseModel> create(@RequestBody UserRequestModel model) {
+        UserResponseModel createdUser = userService.create(model);
+        return ResponseEntity.status(201).body(createdUser);
     }
 }
