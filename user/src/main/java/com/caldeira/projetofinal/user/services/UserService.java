@@ -47,6 +47,7 @@ public class UserService {
                 userEntity.getLastName(), userEntity.getCreationDate());
 
     }
+
     @Transactional
     public UserResponseModel update(UUID id, UserRequestModel requestModel) {
         userRequestValidator.validate(requestModel);
@@ -61,4 +62,14 @@ public class UserService {
                     updatedUser.getLastName(), updatedUser.getCreationDate());
         }).orElse(null);
     }
+
+    public boolean deleteById(UUID id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
