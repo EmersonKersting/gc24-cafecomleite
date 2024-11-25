@@ -5,6 +5,7 @@ import com.caldeira.projetofinal.user.models.request.UserRequestModel;
 import com.caldeira.projetofinal.user.models.response.UserResponseModel;
 import com.caldeira.projetofinal.user.repositories.UserRepository;
 import com.caldeira.projetofinal.user.validators.UserRequestValidator;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,5 +46,19 @@ public class UserService {
         return new UserResponseModel(userEntity.getId(), userEntity.getFirstName(),
                 userEntity.getLastName(), userEntity.getCreationDate());
 
+    }
+    @Transactional
+    public UserResponseModel update(UUID id, UserRequestModel requestModel) {
+        userRequestValidator.validate(requestModel);
+
+        return userRepository.findById(id).map(existingUser -> {
+            existingUser.setFirstName(requestModel.getFirstName());
+            existingUser.setLastName(requestModel.getLastName());
+
+            UserEntity updatedUser = userRepository.save(existingUser);
+
+            return new UserResponseModel(updatedUser.getId(), updatedUser.getFirstName(),
+                    updatedUser.getLastName(), updatedUser.getCreationDate());
+        }).orElse(null);
     }
 }
