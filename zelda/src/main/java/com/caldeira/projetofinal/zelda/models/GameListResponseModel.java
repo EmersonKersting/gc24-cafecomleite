@@ -18,19 +18,4 @@ public class GameListResponseModel {
     private int count;
     private List<Game> data;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Game {
-
-        private String name;
-        private String description;
-        private String developer;
-        private String publisher;
-
-        @JsonProperty("released_date")
-        private String releasedDate;
-        private String id;
-    }
 }
