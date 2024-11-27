@@ -10,9 +10,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameResponseModel {
+public class Game {
 
-    private boolean success;
-    private Game data;
+    private String name;
+    private String description;
+    private String developer;
+    private String publisher;
 
+    @JsonProperty("released_date")
+    private String releasedDate;
+    private String id;
+    }
 }
