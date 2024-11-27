@@ -16,13 +16,13 @@ public class GameListResponseModel {
 
     private boolean success;
     private int count;
-    private List<GameModel> data;
+    private List<Game> data;
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GameModel {
+    public static class Game {
 
         private String name;
         private String description;
