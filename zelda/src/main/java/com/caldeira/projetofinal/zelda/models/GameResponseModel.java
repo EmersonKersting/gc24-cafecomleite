@@ -1,6 +1,5 @@
 package com.caldeira.projetofinal.zelda.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +12,6 @@ import lombok.Setter;
 public class GameResponseModel {
 
     private boolean success;
-    private Game data;
+    private GameModel data;
 
 }
