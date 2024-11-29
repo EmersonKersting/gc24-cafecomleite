@@ -1,15 +1,13 @@
-package com.caldeira.projetofinal.zelda.cotrollers;
+package com.caldeira.projetofinal.zelda.controllers;
 
 @RestController
 @RequestMapping("/zelda")
-public class ZeldaController {
+public class ZeldaController{
+    
+    private final ZeldaGatewayService zeldaGatewayService;
 
-    @Autowired
-    private final ZeldaGetawayService zeldaGetawayService;
-
-
-    public ZeldaController(ZeldaController zeldaController){
-        this.zeldaGetawayService = zeldaController.zeldaGetawayService;
+    public ZeldaController(ZeldaGatewayService zeldaGatewayService) {
+        this.zeldaGatewayService = zeldaGatewayService;
     }
 
 }
