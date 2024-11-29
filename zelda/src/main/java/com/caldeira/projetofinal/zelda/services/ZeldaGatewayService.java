@@ -2,6 +2,7 @@ package com.caldeira.projetofinal.zelda.services;
 
 import com.caldeira.projetofinal.zelda.models.GameModel;
 import com.caldeira.projetofinal.zelda.models.GameListResponseModel;
+import com.caldeira.projetofinal.zelda.models.GameResponseModel;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,6 +16,17 @@ public class ZeldaGatewayService {
 
     public ZeldaGatewayService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+    }
+
+    public GameModel getById(String id) {
+        String url = "https://zelda.fanapis.com/api/games/" + id;
+
+        GameResponseModel response = restTemplate.getForObject(url, GameResponseModel.class);
+
+        if (response == null || !response.isSuccess()) {
+            return null;
+        }
+        return response.getData();
     }
 
     public List<GameModel> getAllByName(String name) {
