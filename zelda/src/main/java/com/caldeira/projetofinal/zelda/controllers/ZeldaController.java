@@ -2,10 +2,7 @@ package com.caldeira.projetofinal.zelda.controllers;
 
 import com.caldeira.projetofinal.zelda.models.GameModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import com.caldeira.projetofinal.zelda.services.ZeldaGatewayService;
 
 import java.util.List;
@@ -27,5 +24,17 @@ public class ZeldaController{
         List<GameModel> games = zeldaGatewayService.getAll(page, size);
         return ResponseEntity.ok(games);
     }
+
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<GameModel> getById(@PathVariable String id) {
+        GameModel game = zeldaGatewayService.getById(id);
+
+        if (game == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(game);
+    }
+
 
 }
