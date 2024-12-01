@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.caldeira.projetofinal.zelda.services.ZeldaGatewayService;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -34,6 +35,12 @@ public class ZeldaController{
         }
 
         return ResponseEntity.ok(game);
+    }
+
+    @GetMapping("/get-by-name/{name}")
+    public ResponseEntity<List<GameModel>> getAllByName(@PathVariable String name) {
+        List<GameModel> games = zeldaGatewayService.getAllByName(name);
+        return ResponseEntity.ok(games);
     }
 
 
