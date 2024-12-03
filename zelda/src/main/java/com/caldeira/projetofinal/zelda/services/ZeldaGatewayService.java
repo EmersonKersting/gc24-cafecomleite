@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -46,14 +45,17 @@ public class ZeldaGatewayService {
     }
 
     public List<GameModel> getAllByName(String name) {
-        String url = "https://api.zelda.com/games?name=" + name;
+        String url = UriComponentsBuilder.fromHttpUrl("https://zelda.fanapis.com/api/games")
+                .queryParam("name", name)
+                .toUriString();
 
         GameListResponseModel response = restTemplate.getForObject(url, GameListResponseModel.class);
 
-        if (response == null || response.getData() == null) {
-            return Collections.emptyList();
+        if (response != null && response.isSuccess()) {
+            return response.getData();
         }
-        return response.getData();
+
+        return List.of();
     }
 
 }
