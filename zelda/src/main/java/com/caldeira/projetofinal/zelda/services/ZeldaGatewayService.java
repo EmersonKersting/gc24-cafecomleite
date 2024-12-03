@@ -46,7 +46,7 @@ public class ZeldaGatewayService {
 
     public List<GameModel> getAllByName(String name) {
         String url = UriComponentsBuilder.fromHttpUrl("https://zelda.fanapis.com/api/games")
-                .queryParam("name", name)
+                .queryParam("?", name)
                 .toUriString();
 
         GameListResponseModel response = restTemplate.getForObject(url, GameListResponseModel.class);
