@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -28,16 +29,14 @@ public class ZeldaGatewayServiceTest {
 
     @Test
     void testGetAll() {
-        // Arrange
+
         String url = "https://zelda.fanapis.com/api/games?limit=5&page=0";
         GameListResponseModel mockResponse = new GameListResponseModel();
         mockResponse.setData(List.of(new GameModel("1", "Zelda: Ocarina of Time", "Action", "1998", "Nintendo", "N64")));
         when(restTemplate.getForObject(url, GameListResponseModel.class)).thenReturn(mockResponse);
 
-        // Act
         List<GameModel> games = zeldaGatewayService.getAll(0, 5);
 
-        // Assert
         assertNotNull(games);
         assertEquals(1, games.size());
         assertEquals("Zelda: Ocarina of Time", games.get(0).getName());
@@ -45,21 +44,39 @@ public class ZeldaGatewayServiceTest {
 
     @Test
     void testGetAllWithNullResponse() {
-        // Arrange
         String url = "https://zelda.fanapis.com/api/games?limit=5&page=0";
         when(restTemplate.getForObject(url, GameListResponseModel.class)).thenReturn(null);
 
-        // Act
         List<GameModel> games = zeldaGatewayService.getAll(0, 5);
 
-        // Assert
         assertNotNull(games);
         assertTrue(games.isEmpty());
     }
 
     @Test
+    void testGetAllWithNullParameters() {
+
+        Integer page = null;
+        Integer size = null;
+        String expectedUrl = UriComponentsBuilder
+                .fromHttpUrl("https://zelda.fanapis.com/api/games")
+                .queryParam("limit", 5) // Default size
+                .queryParam("page", 0)  // Default page
+                .toUriString();
+
+        GameListResponseModel mockResponse = new GameListResponseModel();
+        mockResponse.setData(List.of(new GameModel("1", "Zelda: A Link to the Past", "Action", "1991", "Nintendo", "SNES")));
+        when(restTemplate.getForObject(expectedUrl, GameListResponseModel.class)).thenReturn(mockResponse);
+
+        List<GameModel> games = zeldaGatewayService.getAll(page, size);
+
+        assertNotNull(games);
+        assertEquals(1, games.size());
+        assertEquals("Zelda: A Link to the Past", games.get(0).getName());
+    }
+
+    @Test
     void testGetById() {
-        // Arrange
         String id = "1";
         String url = "https://zelda.fanapis.com/api/games/" + id;
         GameResponseModel mockResponse = new GameResponseModel();
@@ -67,58 +84,95 @@ public class ZeldaGatewayServiceTest {
         mockResponse.setData(new GameModel(id, "Zelda: Breath of the Wild", "Adventure", "2017", "Nintendo", "Switch"));
         when(restTemplate.getForObject(url, GameResponseModel.class)).thenReturn(mockResponse);
 
-        // Act
         GameModel game = zeldaGatewayService.getById(id);
 
-        // Assert
         assertNotNull(game);
         assertEquals("Zelda: Breath of the Wild", game.getName());
     }
 
     @Test
-    void testGetByIdNotFound() {
-        // Arrange
-        String id = "999";
-        String url = "https://zelda.fanapis.com/api/games/" + id;
-        when(restTemplate.getForObject(url, GameResponseModel.class)).thenReturn(null);
+    void testGetByIdWithNullResponse() {
 
-        // Act
-        GameModel game = zeldaGatewayService.getById(id);
+        String id = "1";
+        String expectedUrl = "https://zelda.fanapis.com/api/games/" + id;
 
-        // Assert
-        assertNull(game);
+        when(restTemplate.getForObject(expectedUrl, GameResponseModel.class)).thenReturn(null);
+
+        GameModel result = zeldaGatewayService.getById(id);
+
+        assertNull(result);
+    }
+
+    @Test
+    void testGetByIdWithUnsuccessfulResponse() {
+
+        String id = "1";
+        String expectedUrl = "https://zelda.fanapis.com/api/games/" + id;
+
+        GameResponseModel mockResponse = new GameResponseModel();
+        mockResponse.setSuccess(false);
+        when(restTemplate.getForObject(expectedUrl, GameResponseModel.class)).thenReturn(mockResponse);
+
+        GameModel result = zeldaGatewayService.getById(id);
+
+        assertNull(result);
     }
 
     @Test
     void testGetAllByName() {
-        // Arrange
-        String name = "Zelda";
-        String url = "https://api.zelda.com/games?name=" + name;
-        GameListResponseModel mockResponse = new GameListResponseModel();
-        mockResponse.setData(List.of(new GameModel("1", "Zelda: Ocarina of Time", "Action", "1998", "Nintendo", "N64")));
-        when(restTemplate.getForObject(url, GameListResponseModel.class)).thenReturn(mockResponse);
 
-        // Act
+        String name = "Zelda";
+        String expectedUrl = UriComponentsBuilder.fromHttpUrl("https://zelda.fanapis.com/api/games")
+                .queryParam("name", name)
+                .toUriString();
+
+        GameListResponseModel mockResponse = new GameListResponseModel();
+        mockResponse.setSuccess(true);
+        mockResponse.setData(List.of(new GameModel("1", "Zelda: Ocarina of Time",
+                "Action", "1998", "Nintendo", "N64")));
+
+        when(restTemplate.getForObject(expectedUrl, GameListResponseModel.class)).thenReturn(mockResponse);
+
         List<GameModel> games = zeldaGatewayService.getAllByName(name);
 
-        // Assert
         assertNotNull(games);
         assertEquals(1, games.size());
         assertEquals("Zelda: Ocarina of Time", games.get(0).getName());
     }
 
     @Test
-    void testGetAllByNameEmptyList() {
-        // Arrange
-        String name = "NonExistentGame";
-        String url = "https://api.zelda.com/games?name=" + name;
-        when(restTemplate.getForObject(url, GameListResponseModel.class)).thenReturn(new GameListResponseModel());
+    void testGetAllByNameWithNullResponse() {
 
-        // Act
+        String name = "Zelda";
+        String expectedUrl = UriComponentsBuilder.fromHttpUrl("https://zelda.fanapis.com/api/games")
+                .queryParam("name", name)
+                .toUriString();
+
+        when(restTemplate.getForObject(expectedUrl, GameListResponseModel.class)).thenReturn(null);
+
         List<GameModel> games = zeldaGatewayService.getAllByName(name);
 
-        // Assert
+        assertNotNull(games);
+        assertTrue(games.isEmpty());
+    }
+
+    @Test
+    void testGetAllByNameWithUnsuccessfulResponse() {
+
+        String name = "Zelda";
+        String expectedUrl = UriComponentsBuilder.fromHttpUrl("https://zelda.fanapis.com/api/games")
+                .queryParam("name", name)
+                .toUriString();
+
+        GameListResponseModel mockResponse = new GameListResponseModel();
+        mockResponse.setSuccess(false);
+        when(restTemplate.getForObject(expectedUrl, GameListResponseModel.class)).thenReturn(mockResponse);
+
+        List<GameModel> games = zeldaGatewayService.getAllByName(name);
+
         assertNotNull(games);
         assertTrue(games.isEmpty());
     }
 }
+
+

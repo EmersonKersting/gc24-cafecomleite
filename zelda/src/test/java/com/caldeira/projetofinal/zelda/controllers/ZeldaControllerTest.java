@@ -12,10 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ZeldaControllerTest {
 
-    // Criação de uma instância simples de RestTemplate
     private final RestTemplate restTemplate = new RestTemplate();
 
-    // Implementação simples (stub) de ZeldaGatewayService, agora passando o RestTemplate
     private final ZeldaGatewayService zeldaGatewayService = new ZeldaGatewayService(restTemplate) {
         @Override
         public List<GameModel> getAll(Integer page, Integer size) {
@@ -36,15 +34,12 @@ class ZeldaControllerTest {
         }
     };
 
-    // Criação do controlador, injetando a implementação "stub" do ZeldaGatewayService
     private final ZeldaController zeldaController = new ZeldaController(zeldaGatewayService);
 
     @Test
     void testGetAll() {
-        // Act
         ResponseEntity<List<GameModel>> response = zeldaController.getAll(null, null);
 
-        // Assert
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
@@ -53,10 +48,8 @@ class ZeldaControllerTest {
 
     @Test
     void testGetByIdFound() {
-        // Act
         ResponseEntity<GameModel> response = zeldaController.getById("1");
 
-        // Assert
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertEquals("1", response.getBody().getId());
@@ -65,20 +58,16 @@ class ZeldaControllerTest {
 
     @Test
     void testGetByIdNotFound() {
-        // Act
         ResponseEntity<GameModel> response = zeldaController.getById("99");
 
-        // Assert
         assertEquals(404, response.getStatusCodeValue());
         assertNull(response.getBody());
     }
 
     @Test
     void testGetAllByName() {
-        // Act
         ResponseEntity<List<GameModel>> response = zeldaController.getAllByName("Zelda");
 
-        // Assert
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
