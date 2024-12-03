@@ -12,11 +12,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GameModel {
 
-    private String id;
     private String name;
     private String description;
     private String developer;
     private String publisher;
     @JsonProperty("released_date")
     private String releasedDate;
+    @JsonProperty("id")
+    private String id;
+
 }
